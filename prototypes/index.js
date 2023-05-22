@@ -650,11 +650,22 @@ const breweryPrompts = {
     // e.g.
     // { name: 'Barrel Aged Nature\'s Sweater', type: 'Barley Wine', abv: 10.9, ibu: 40 }
 
-
+    return breweries.reduce((highestAbv, currentBrewery) =>  {
+      currentBrewery.beers.forEach(beer => {
+        if (beer.abv > highestAbv.abv) {
+          highestAbv = beer;
+        }
+      })
+      return highestAbv
+    }, breweries[0].beers[0])
 
     // Annotation:
-    // create an array of just beers
-    // sort by abv
+    // reduce to a single beer
+    // set starting value equal to the first beer in the first brewery
+    // for each brewery, iterate through array of beers
+    // for each beer, compare its abv to the abv of the accumulator
+    // if the currentBeers abv is higher than the accumulators abv, reassign the accumulator to the currentBeer
+    // return accumulator
     
   }
 };
