@@ -697,7 +697,8 @@ const boardGamePrompts = {
     // e.g. given an argument of "childrens", return
     // ["Candy Land", "Connect Four", "Operation", "Trouble"]
 
-    /* CODE GOES HERE */
+    const names = boardGames[type].map(game => game.name);
+    return names.sort();
 
     // Annotation:
     // Write your annotation here as a comment
