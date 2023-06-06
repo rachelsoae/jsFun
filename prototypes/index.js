@@ -685,7 +685,7 @@ const boardGamePrompts = {
     // e.g. given an argument of "strategy", return
     // ["Chess", "Catan", "Checkers", "Pandemic", "Battle Ship", "Azul", "Ticket to Ride"]
 
-    /* CODE GOES HERE */
+    return boardGames[type].map(game => game.name)
 
     // Annotation:
     // Write your annotation here as a comment
@@ -697,7 +697,8 @@ const boardGamePrompts = {
     // e.g. given an argument of "childrens", return
     // ["Candy Land", "Connect Four", "Operation", "Trouble"]
 
-    /* CODE GOES HERE */
+    const names = boardGames[type].map(game => game.name);
+    return names.sort();
 
     // Annotation:
     // Write your annotation here as a comment
@@ -708,7 +709,12 @@ const boardGamePrompts = {
     // e.g. given the argument of 'party', return
     // { name: 'Codenames', rating: 7.4, maxPlayers: 8 },
 
-    /* CODE GOES HERE */
+    return boardGames[type].reduce((highestRated, currentGame) => {
+      if (currentGame.rating > highestRated.rating) {
+        highestRated = currentGame;
+      }
+      return highestRated;
+    })
 
     // Annotation:
     // Write your annotation here as a comment
@@ -719,7 +725,12 @@ const boardGamePrompts = {
     // e.g. given the argument of "strategy", return 7
     // note: do not worry about rounding your result.
 
-    /* CODE GOES HERE */
+    const total = boardGames[type].reduce((ratingsAcc, currentGame) => {
+      ratingsAcc += currentGame.rating
+      return ratingsAcc
+    }, 0)
+
+    return total / boardGames[type].length;
 
     // Annotation:
     // Write your annotation here as a comment
@@ -731,7 +742,14 @@ const boardGamePrompts = {
     // e.g. given the arguments of "strategy" and 2, return 6.16666666667
     // note: do not worry about rounding your result.
 
-    /* CODE GOES HERE */
+    const matchPlayers = boardGames[type].filter(game => game.maxPlayers === maximumPlayers);
+
+    const totalRating = matchPlayers.reduce((ratingsAcc, currentGame) => {
+      ratingsAcc += currentGame.rating
+      return ratingsAcc
+    }, 0)
+
+    return totalRating / matchPlayers.length
 
     // Annotation:
     // Write your annotation here as a comment
