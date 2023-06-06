@@ -709,7 +709,12 @@ const boardGamePrompts = {
     // e.g. given the argument of 'party', return
     // { name: 'Codenames', rating: 7.4, maxPlayers: 8 },
 
-    /* CODE GOES HERE */
+    return boardGames[type].reduce((highestRated, currentGame) => {
+      if (currentGame.rating > highestRated.rating) {
+        highestRated = currentGame;
+      }
+      return highestRated;
+    })
 
     // Annotation:
     // Write your annotation here as a comment
