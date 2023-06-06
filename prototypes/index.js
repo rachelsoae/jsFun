@@ -685,7 +685,7 @@ const boardGamePrompts = {
     // e.g. given an argument of "strategy", return
     // ["Chess", "Catan", "Checkers", "Pandemic", "Battle Ship", "Azul", "Ticket to Ride"]
 
-    /* CODE GOES HERE */
+    return boardGames[type].map(game => game.name)
 
     // Annotation:
     // Write your annotation here as a comment
