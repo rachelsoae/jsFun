@@ -725,7 +725,12 @@ const boardGamePrompts = {
     // e.g. given the argument of "strategy", return 7
     // note: do not worry about rounding your result.
 
-    /* CODE GOES HERE */
+    const total = boardGames[type].reduce((ratingsAcc, currentGame) => {
+      ratingsAcc += currentGame.rating
+      return ratingsAcc
+    }, 0)
+
+    return total / boardGames[type].length;
 
     // Annotation:
     // Write your annotation here as a comment
