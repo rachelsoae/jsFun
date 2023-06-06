@@ -742,7 +742,14 @@ const boardGamePrompts = {
     // e.g. given the arguments of "strategy" and 2, return 6.16666666667
     // note: do not worry about rounding your result.
 
-    /* CODE GOES HERE */
+    const matchPlayers = boardGames[type].filter(game => game.maxPlayers === maximumPlayers);
+
+    const totalRating = matchPlayers.reduce((ratingsAcc, currentGame) => {
+      ratingsAcc += currentGame.rating
+      return ratingsAcc
+    }, 0)
+
+    return totalRating / matchPlayers.length
 
     // Annotation:
     // Write your annotation here as a comment
