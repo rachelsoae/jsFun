@@ -832,7 +832,8 @@ const turingPrompts = {
     }, {})
 
     return cohorts.reduce((newObject, currentCohort) => {
-      cohort[currentCohort.cohort] = 
+      newObject[`cohort${currentCohort.cohort}`] = (currentCohort.studentCount / instructorsByCohort[currentCohort.module].length)
+      return newObject;
     }, {});
 
     // Annotation:
@@ -864,10 +865,29 @@ const turingPrompts = {
     //     Will: [1, 2, 3, 4]
     //   }
 
-    /* CODE GOES HERE */
+    return instructors.reduce((newObject, currentInstructor) => {
+      let modsByTeacher = [];
+      cohorts.forEach(cohort => {
+        cohort.curriculum.forEach(subject => {
+          if (currentInstructor.teaches.includes(subject) && !modsByTeacher.includes(cohort.module)) {
+            return modsByTeacher.push(cohort.module)
+          }
+        })
+      })
+      
+      newObject[currentInstructor.name] = modsByTeacher;
+      return newObject;
+    }, {})
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce to a new object
+    // iterate over instructors array
+    // for each instructor, add their name as a key to the new object
+    // set them equal to the modules they can teach
+    // to get the modules they can teach, iterate over cohorts
+    // for each cohort, iterate over curriculum
+    // for each subject, check to see if the instructor's subjects include that subject
+    // if yes, return that module - as long as it's not already in the array (no dupes)
   },
 
   curriculumPerTeacher() {
@@ -880,10 +900,27 @@ const turingPrompts = {
     //   recursion: [ 'Pam', 'Leta' ]
     // }
 
-    /* CODE GOES HERE */
+    return cohorts.reduce((newObject, currentCohort) => {
+      currentCohort.curriculum.forEach(subject => {
+        newObject[subject] || (newObject[subject] = [])
+      
+        instructors.forEach(instructor => {
+          if (instructor.teaches.includes(subject) && !newObject[subject].includes(instructor.name)) {
+            newObject[subject].push(instructor.name)
+          }
+        })
+      })
+      return newObject;
+    }, {})
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce to new object
+    // iterate over cohorts
+    // for each cohort, iterate over curriculum
+    // if newObject does not already contain subject as a key, create it and set equal to an empty array
+    // iterate over instructors
+    // for each instructor, if teaches includes subject, push name of teacher into new object at key of subject
+    // return new object
   }
 };
 
