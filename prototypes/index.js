@@ -796,10 +796,26 @@ const turingPrompts = {
     //  { name: 'Robbie', studentCount: 18 }
     // ]
 
-    /* CODE GOES HERE */
+    return instructors.map(instructor => {
+      let numStudents;
+      
+      cohorts.forEach(cohort => {
+        if (cohort.module === instructor.module) {
+          return numStudents = cohort.studentCount;
+        }
+      })
+      
+      return {
+        name: instructor.name,
+        studentCount: numStudents
+      }
+    })
 
     // Annotation:
-    // Write your annotation here as a comment
+    // map a new array of objects from  teachers
+    // for each teacher, iterate over cohorts
+    // if module of current cohort matches current instructor's cohort, set instructorsStudents equal to the student count for the current cohort
+    // return an object with the current instructor's name and the instructorsStudents
   },
 
   studentsPerInstructor() {
@@ -809,10 +825,28 @@ const turingPrompts = {
     // cohort1804: 10.5
     // }
 
-    /* CODE GOES HERE */
+    const instructorsByCohort = instructors.reduce((newObject, currentInstructor) => {
+      newObject[currentInstructor.module] || (newObject[currentInstructor.module] = []);
+      newObject[currentInstructor.module].push(currentInstructor.name)
+      return newObject
+    }, {})
+
+    return cohorts.reduce((newObject, currentCohort) => {
+      cohort[currentCohort.cohort] = 
+    }, {});
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce to a new object
+    // iterate over cohorts
+    // for each cohort, create the key or set it equal to a number
+    // the number is studentCount divided by the number of teachers that teach that cohort
+    // the number of teachers taht teach the cohort will be in the new object as newObject[module].length
+
+    // to find the number of teachers that teach each cohort:
+    // reduce instructors to a new object
+    // check to see if the current instructor's module is a key, if not create it and set it equal to an array
+    // push the name of the instructor into the array
+    // return the new object
   },
 
   modulesPerTeacher() {
