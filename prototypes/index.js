@@ -1030,10 +1030,22 @@ const astronomyPrompts = {
     //   }
     // ]
 
-    /* CODE GOES HERE */
+    const constellationNames = Object.keys(constellations)
+    const allStars = constellationNames.reduce((newArray, currentConst) => {
+      constellations[currentConst].starNames.forEach(star => {
+        if (!newArray.includes(star)) {
+          newArray.push(star);
+        }
+      })
+      return newArray;
+    }, [])
+
+    return stars.filter(star => allStars.includes(star));
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce star names to a single array
+    // filter stars array
+    // if star names array includes that star's name, return the star
   },
 
   starsByColor() {
