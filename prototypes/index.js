@@ -1118,10 +1118,18 @@ const ultimaPrompts = {
     // Return the sum of the amount of damage for all the weapons that our characters can use
     // Answer => 113
 
-    /* CODE GOES HERE */
+    return characters.reduce((totalDamage, currentChar) => {
+      currentChar.weapons.forEach(weapon => {
+        totalDamage += weapons[weapon].damage
+      })
+      return totalDamage
+    }, 0)
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce characters to a single object
+    // iterate over each weapons array
+    // for each weapon, add the damage to the total damage
+    // return total damage
   },
 
   charactersByTotal() {
@@ -1129,10 +1137,24 @@ const ultimaPrompts = {
     // Return the sum damage and total range for each character as an object.
     // ex: [ { Avatar: { damage: 27, range: 24 }, { Iolo: {...}, ...}
 
-    /* CODE GOES HERE */
+    return characters.map(character => {
+      const weaponsObject = character.weapons.reduce((newObject, currentWeapon) => {
+        newObject.damage += weapons[currentWeapon].damage;
+        newObject.range += weapons[currentWeapon].range;
+        return newObject;
+      }, {damage: 0, range: 0})
+      
+      return {
+        [character.name]: weaponsObject
+      }
+    })
 
     // Annotation:
-    // Write your annotation here as a comment
+    // map a new array of characters
+    // key is name
+    // value is a new object
+    // reduce character's weapons to new object
+    // for each weapon, add its damage and range to the object;
   },
 };
 
