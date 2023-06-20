@@ -1008,18 +1008,20 @@ const astronomyPrompts = {
     //     visualMagnitude: 0.13,
     //     constellation: 'Orion',
     //     lightYearsFromEarth: 860,
-    //     color: 'blue' },
-    //   { name: 'Betelgeuse',
-    //     visualMagnitude: 0.5,
-    //     constellation: 'Orion',
-    //     lightYearsFromEarth: 640,
-    //     color: 'red' },
+    //     color: 'blue' 
+    //   },
     //   {
     //     name: 'Achernar',
     //     visualMagnitude: 0.46,
     //     constellation: 'The Plow',
     //     lightYearsFromEarth: 140,
     //     color: 'blue'
+    //   },
+    //   { name: 'Betelgeuse',
+    //     visualMagnitude: 0.5,
+    //     constellation: 'Orion',
+    //     lightYearsFromEarth: 640,
+    //     color: 'red' 
     //   },
     //   {
     //     name: 'Hadar',
@@ -1040,7 +1042,7 @@ const astronomyPrompts = {
       return newArray;
     }, [])
 
-    return stars.filter(star => allStars.includes(star));
+    return stars.filter(star => (allStars.includes(star.name)))  
 
     // Annotation:
     // reduce star names to a single array
@@ -1059,7 +1061,11 @@ const astronomyPrompts = {
     //   red: [{obj}]
     // }
 
-    /* CODE GOES HERE */
+    return stars.reduce((newObject, currentStar) => {
+      newObject[currentStar.color] || (newObject[currentStar.color] = []);
+      newObject[currentStar.color].push(currentStar)
+      return newObject;
+    }, {})
 
     // Annotation:
     // Write your annotation here as a comment
@@ -1081,10 +1087,11 @@ const astronomyPrompts = {
     //    "The Little Dipper" ]
 
 
-    /* CODE GOES HERE */
+    return stars.sort((a, b) => a.visualMagnitude - b.visualMagnitude).filter(star => star.constellation.length).map(star => star.constellation);
 
     // Annotation:
-    // Write your annotation here as a comment
+    // sort stars by visual magnitude
+    //map constellations
   }
 };
 
