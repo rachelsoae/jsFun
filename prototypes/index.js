@@ -1233,10 +1233,36 @@ const dinosaurPrompts = {
       }
     */
 
-    /* CODE GOES HERE */
+    return movies.reduce((newObject, currentMovie) => {
+      newObject[currentMovie.director] || (newObject[currentMovie.director] = movies.reduce((innerObj, innerMovie) => {
+        if (innerMovie.director === currentMovie.director) {
+          let totalAge;
+          
+          totalAge = innerMovie.cast.reduce((total, currentCast) => {
+            let castAge = parseInt(innerMovie.yearReleased) - parseInt(humans[currentCast].yearBorn)
+            total += castAge;
+            return total
+          }, 0);
+
+          innerObj[innerMovie.title] = Math.floor(totalAge /(innerMovie.cast.length));
+        }
+        return innerObj;
+      }, {})
+      )
+      return newObject;
+    }, { })
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce movies to a new object
+    // create a key that is the director's name (if it does not already exist)
+    // value - reduce movies to another new object
+    // for each movie at the current director's name, create a key for that movie
+    // calculate the average age of the cast
+    //  iterate over the cast array
+    //  access humans at cast member
+    //  add (2023 - year born) to total age
+    //  divide total age by length of cast array
+    // assign average age as value
   },
 
   uncastActors() {
@@ -1265,10 +1291,32 @@ const dinosaurPrompts = {
       }]
     */
 
-    /* CODE GOES HERE */
+    const humanNames = Object.keys(humans);
+    const humansInMovies = movies.reduce((newArray, currentMovie) => {
+      currentMovie.cast.forEach(castMember => {
+        if (!newArray.includes(castMember)) {
+          newArray.push(castMember);
+        }
+      })
+      return newArray;
+    }, [])
+    const uncastHumans = humanNames.filter(human => !humansInMovies.includes(human))
+
+    const uncastActors = uncastHumans.map(human => {
+      return {
+        name: human,
+        nationality: humans[human].nationality,
+        imdbStarMeterRating: humans[human].imdbStarMeterRating
+      }
+    })
+
+    return uncastActors.sort((a, b) => (a.nationality > b.nationality) ? 1 : -1)
 
     // Annotation:
-    // Write your annotation here as a comment
+    // filter humans
+    // iterate over movies array
+    // for each movie, if the cast array does not contain the current human's name, return the human
+    // map a new array - delete their yearBorn and sort alphabetically by nationality
   },
 
   actorsAgesInMovies() {
