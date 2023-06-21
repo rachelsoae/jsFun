@@ -796,10 +796,26 @@ const turingPrompts = {
     //  { name: 'Robbie', studentCount: 18 }
     // ]
 
-    /* CODE GOES HERE */
+    return instructors.map(instructor => {
+      let numStudents;
+      
+      cohorts.forEach(cohort => {
+        if (cohort.module === instructor.module) {
+          return numStudents = cohort.studentCount;
+        }
+      })
+      
+      return {
+        name: instructor.name,
+        studentCount: numStudents
+      }
+    })
 
     // Annotation:
-    // Write your annotation here as a comment
+    // map a new array of objects from  teachers
+    // for each teacher, iterate over cohorts
+    // if module of current cohort matches current instructor's cohort, set instructorsStudents equal to the student count for the current cohort
+    // return an object with the current instructor's name and the instructorsStudents
   },
 
   studentsPerInstructor() {
@@ -809,10 +825,29 @@ const turingPrompts = {
     // cohort1804: 10.5
     // }
 
-    /* CODE GOES HERE */
+    const instructorsByCohort = instructors.reduce((newObject, currentInstructor) => {
+      newObject[currentInstructor.module] || (newObject[currentInstructor.module] = []);
+      newObject[currentInstructor.module].push(currentInstructor.name)
+      return newObject
+    }, {})
+
+    return cohorts.reduce((newObject, currentCohort) => {
+      newObject[`cohort${currentCohort.cohort}`] = (currentCohort.studentCount / instructorsByCohort[currentCohort.module].length)
+      return newObject;
+    }, {});
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce to a new object
+    // iterate over cohorts
+    // for each cohort, create the key or set it equal to a number
+    // the number is studentCount divided by the number of teachers that teach that cohort
+    // the number of teachers taht teach the cohort will be in the new object as newObject[module].length
+
+    // to find the number of teachers that teach each cohort:
+    // reduce instructors to a new object
+    // check to see if the current instructor's module is a key, if not create it and set it equal to an array
+    // push the name of the instructor into the array
+    // return the new object
   },
 
   modulesPerTeacher() {
@@ -830,10 +865,29 @@ const turingPrompts = {
     //     Will: [1, 2, 3, 4]
     //   }
 
-    /* CODE GOES HERE */
+    return instructors.reduce((newObject, currentInstructor) => {
+      let modsByTeacher = [];
+      cohorts.forEach(cohort => {
+        cohort.curriculum.forEach(subject => {
+          if (currentInstructor.teaches.includes(subject) && !modsByTeacher.includes(cohort.module)) {
+            return modsByTeacher.push(cohort.module)
+          }
+        })
+      })
+      
+      newObject[currentInstructor.name] = modsByTeacher;
+      return newObject;
+    }, {})
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce to a new object
+    // iterate over instructors array
+    // for each instructor, add their name as a key to the new object
+    // set them equal to the modules they can teach
+    // to get the modules they can teach, iterate over cohorts
+    // for each cohort, iterate over curriculum
+    // for each subject, check to see if the instructor's subjects include that subject
+    // if yes, return that module - as long as it's not already in the array (no dupes)
   },
 
   curriculumPerTeacher() {
@@ -846,10 +900,27 @@ const turingPrompts = {
     //   recursion: [ 'Pam', 'Leta' ]
     // }
 
-    /* CODE GOES HERE */
+    return cohorts.reduce((newObject, currentCohort) => {
+      currentCohort.curriculum.forEach(subject => {
+        newObject[subject] || (newObject[subject] = [])
+      
+        instructors.forEach(instructor => {
+          if (instructor.teaches.includes(subject) && !newObject[subject].includes(instructor.name)) {
+            newObject[subject].push(instructor.name)
+          }
+        })
+      })
+      return newObject;
+    }, {})
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce to new object
+    // iterate over cohorts
+    // for each cohort, iterate over curriculum
+    // if newObject does not already contain subject as a key, create it and set equal to an empty array
+    // iterate over instructors
+    // for each instructor, if teaches includes subject, push name of teacher into new object at key of subject
+    // return new object
   }
 };
 
@@ -880,10 +951,34 @@ const bossPrompts = {
     //   { bossName: 'Scar', sidekickLoyalty: 16 }
     // ]
 
-    /* CODE GOES HERE */
+    const bossNames = Object.keys(bosses);
+    
+    return bossNames.map(boss => {
+      let bossName = bosses[boss].name;
+      let combinedLoyalty = bosses[boss].sidekicks.reduce((totalLoyalty, currentSidekick) => {
+        sidekicks.forEach(sidekick => {
+          if (sidekick.name === currentSidekick.name) {
+            totalLoyalty += sidekick.loyaltyToBoss;
+          }
+        })
+        return totalLoyalty
+      }, 0);
+
+      return {
+        bossName: bossName,
+        sidekickLoyalty: combinedLoyalty
+      };
+    });
 
     // Annotation:
-    // Write your annotation here as a comment
+    // get array of boss keys = bosses
+    // iterate over bosses array
+    // map new array
+    // for each boss, add their name as a value
+    // for each boss, reduce all sidekick loyalty to a single number
+    // iterate over their sidekicks
+    // for each sidekick, iterate over the sidekicks array
+    // if the current sidekicks name matches the bosses sidekick, create a key that has their loyalty
   }
 };
 
@@ -913,18 +1008,20 @@ const astronomyPrompts = {
     //     visualMagnitude: 0.13,
     //     constellation: 'Orion',
     //     lightYearsFromEarth: 860,
-    //     color: 'blue' },
-    //   { name: 'Betelgeuse',
-    //     visualMagnitude: 0.5,
-    //     constellation: 'Orion',
-    //     lightYearsFromEarth: 640,
-    //     color: 'red' },
+    //     color: 'blue' 
+    //   },
     //   {
     //     name: 'Achernar',
     //     visualMagnitude: 0.46,
     //     constellation: 'The Plow',
     //     lightYearsFromEarth: 140,
     //     color: 'blue'
+    //   },
+    //   { name: 'Betelgeuse',
+    //     visualMagnitude: 0.5,
+    //     constellation: 'Orion',
+    //     lightYearsFromEarth: 640,
+    //     color: 'red' 
     //   },
     //   {
     //     name: 'Hadar',
@@ -935,10 +1032,22 @@ const astronomyPrompts = {
     //   }
     // ]
 
-    /* CODE GOES HERE */
+    const constellationNames = Object.keys(constellations)
+    const allStars = constellationNames.reduce((newArray, currentConst) => {
+      constellations[currentConst].starNames.forEach(star => {
+        if (!newArray.includes(star)) {
+          newArray.push(star);
+        }
+      })
+      return newArray;
+    }, [])
+
+    return stars.filter(star => (allStars.includes(star.name)))  
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce star names to a single array
+    // filter stars array
+    // if star names array includes that star's name, return the star
   },
 
   starsByColor() {
@@ -952,7 +1061,11 @@ const astronomyPrompts = {
     //   red: [{obj}]
     // }
 
-    /* CODE GOES HERE */
+    return stars.reduce((newObject, currentStar) => {
+      newObject[currentStar.color] || (newObject[currentStar.color] = []);
+      newObject[currentStar.color].push(currentStar)
+      return newObject;
+    }, {})
 
     // Annotation:
     // Write your annotation here as a comment
@@ -974,10 +1087,11 @@ const astronomyPrompts = {
     //    "The Little Dipper" ]
 
 
-    /* CODE GOES HERE */
+    return stars.sort((a, b) => a.visualMagnitude - b.visualMagnitude).filter(star => star.constellation.length).map(star => star.constellation);
 
     // Annotation:
-    // Write your annotation here as a comment
+    // sort stars by visual magnitude
+    //map constellations
   }
 };
 
@@ -1004,10 +1118,18 @@ const ultimaPrompts = {
     // Return the sum of the amount of damage for all the weapons that our characters can use
     // Answer => 113
 
-    /* CODE GOES HERE */
+    return characters.reduce((totalDamage, currentChar) => {
+      currentChar.weapons.forEach(weapon => {
+        totalDamage += weapons[weapon].damage
+      })
+      return totalDamage
+    }, 0)
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce characters to a single object
+    // iterate over each weapons array
+    // for each weapon, add the damage to the total damage
+    // return total damage
   },
 
   charactersByTotal() {
@@ -1015,10 +1137,24 @@ const ultimaPrompts = {
     // Return the sum damage and total range for each character as an object.
     // ex: [ { Avatar: { damage: 27, range: 24 }, { Iolo: {...}, ...}
 
-    /* CODE GOES HERE */
+    return characters.map(character => {
+      const weaponsObject = character.weapons.reduce((newObject, currentWeapon) => {
+        newObject.damage += weapons[currentWeapon].damage;
+        newObject.range += weapons[currentWeapon].range;
+        return newObject;
+      }, {damage: 0, range: 0})
+      
+      return {
+        [character.name]: weaponsObject
+      }
+    })
 
     // Annotation:
-    // Write your annotation here as a comment
+    // map a new array of characters
+    // key is name
+    // value is a new object
+    // reduce character's weapons to new object
+    // for each weapon, add its damage and range to the object;
   },
 };
 
@@ -1051,10 +1187,24 @@ const dinosaurPrompts = {
     //   'Jurassic World: Fallen Kingdom': 18
     // }
 
-    /* CODE GOES HERE */
-
+    return movies.reduce((newObject, currentMovie) => {
+      newObject[currentMovie.title] || (newObject[currentMovie.title] = currentMovie.dinos.reduce((numAwesome, currentDino) => {
+        if (dinosaurs[currentDino].isAwesome) {
+          numAwesome += 1;
+        }
+        return numAwesome
+      }, 0))
+      return newObject;
+    }, {})
+ 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce movies to a single object
+    // key is movie title
+    // value is number awesome dinos
+    // reduce movie dinos to a single number
+    // for each dino, if it is awesome add 1 to the number
+    // return the number
+    //return new object
   },
 
   averageAgePerMovie() {
@@ -1083,10 +1233,36 @@ const dinosaurPrompts = {
       }
     */
 
-    /* CODE GOES HERE */
+    return movies.reduce((newObject, currentMovie) => {
+      newObject[currentMovie.director] || (newObject[currentMovie.director] = movies.reduce((innerObj, innerMovie) => {
+        if (innerMovie.director === currentMovie.director) {
+          let totalAge;
+          
+          totalAge = innerMovie.cast.reduce((total, currentCast) => {
+            let castAge = parseInt(innerMovie.yearReleased) - parseInt(humans[currentCast].yearBorn)
+            total += castAge;
+            return total
+          }, 0);
+
+          innerObj[innerMovie.title] = Math.floor(totalAge /(innerMovie.cast.length));
+        }
+        return innerObj;
+      }, {})
+      )
+      return newObject;
+    }, { })
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce movies to a new object
+    // create a key that is the director's name (if it does not already exist)
+    // value - reduce movies to another new object
+    // for each movie at the current director's name, create a key for that movie
+    // calculate the average age of the cast
+    //  iterate over the cast array
+    //  access humans at cast member
+    //  add (2023 - year born) to total age
+    //  divide total age by length of cast array
+    // assign average age as value
   },
 
   uncastActors() {
@@ -1115,10 +1291,32 @@ const dinosaurPrompts = {
       }]
     */
 
-    /* CODE GOES HERE */
+    const humanNames = Object.keys(humans);
+    const humansInMovies = movies.reduce((newArray, currentMovie) => {
+      currentMovie.cast.forEach(castMember => {
+        if (!newArray.includes(castMember)) {
+          newArray.push(castMember);
+        }
+      })
+      return newArray;
+    }, [])
+    const uncastHumans = humanNames.filter(human => !humansInMovies.includes(human))
+
+    const uncastActors = uncastHumans.map(human => {
+      return {
+        name: human,
+        nationality: humans[human].nationality,
+        imdbStarMeterRating: humans[human].imdbStarMeterRating
+      }
+    })
+
+    return uncastActors.sort((a, b) => (a.nationality > b.nationality) ? 1 : -1)
 
     // Annotation:
-    // Write your annotation here as a comment
+    // filter humans
+    // iterate over movies array
+    // for each movie, if the cast array does not contain the current human's name, return the human
+    // map a new array - delete their yearBorn and sort alphabetically by nationality
   },
 
   actorsAgesInMovies() {
@@ -1137,10 +1335,37 @@ const dinosaurPrompts = {
       { name: 'Bryce Dallas Howard', ages: [ 34, 37 ] } ]
     */
 
-    /* CODE GOES HERE */
+    const actors = movies.reduce((newArray, currentMovie) => {
+      currentMovie.cast.forEach(person => {
+        newArray.includes(person) || newArray.push(person);
+      })
+      return newArray;
+    }, []);
+    
+    return actors.map(currentActor => {
+      let newObject = {
+        name: currentActor,
+        ages: []
+      }
+      movies.forEach(movie => {
+        if (movie.cast.includes(currentActor)) {
+          newObject.ages.push(parseInt(movie.yearReleased - humans[currentActor].yearBorn))
+        }
+      })
+      return newObject;
+    });
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce movies to an array of actors with no repeats
+    // map array to an array of objects
+    // for each actor, let a key/value be their name
+    // for each actor, let a key be their ages
+    // to get ages value:
+    //  iterate over movies array
+    //  if cast includes the actor's name
+    //  subtract year born from year released to get release age
+    //  push release age into ages array
+    // return new object
   }
 };
 
