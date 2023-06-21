@@ -1187,10 +1187,24 @@ const dinosaurPrompts = {
     //   'Jurassic World: Fallen Kingdom': 18
     // }
 
-    /* CODE GOES HERE */
-
+    return movies.reduce((newObject, currentMovie) => {
+      newObject[currentMovie.title] || (newObject[currentMovie.title] = currentMovie.dinos.reduce((numAwesome, currentDino) => {
+        if (dinosaurs[currentDino].isAwesome) {
+          numAwesome += 1;
+        }
+        return numAwesome
+      }, 0))
+      return newObject;
+    }, {})
+ 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce movies to a single object
+    // key is movie title
+    // value is number awesome dinos
+    // reduce movie dinos to a single number
+    // for each dino, if it is awesome add 1 to the number
+    // return the number
+    //return new object
   },
 
   averageAgePerMovie() {
