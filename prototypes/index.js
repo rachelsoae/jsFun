@@ -1335,10 +1335,37 @@ const dinosaurPrompts = {
       { name: 'Bryce Dallas Howard', ages: [ 34, 37 ] } ]
     */
 
-    /* CODE GOES HERE */
+    const actors = movies.reduce((newArray, currentMovie) => {
+      currentMovie.cast.forEach(person => {
+        newArray.includes(person) || newArray.push(person);
+      })
+      return newArray;
+    }, []);
+    
+    return actors.map(currentActor => {
+      let newObject = {
+        name: currentActor,
+        ages: []
+      }
+      movies.forEach(movie => {
+        if (movie.cast.includes(currentActor)) {
+          newObject.ages.push(parseInt(movie.yearReleased - humans[currentActor].yearBorn))
+        }
+      })
+      return newObject;
+    });
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce movies to an array of actors with no repeats
+    // map array to an array of objects
+    // for each actor, let a key/value be their name
+    // for each actor, let a key be their ages
+    // to get ages value:
+    //  iterate over movies array
+    //  if cast includes the actor's name
+    //  subtract year born from year released to get release age
+    //  push release age into ages array
+    // return new object
   }
 };
 
